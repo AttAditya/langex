@@ -1,0 +1,6 @@
+{
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.extraPaths": ["."],
+  "python.analysis.indexing": true,
+  "python.analysis.diagnosticMode": "workspace",
+}
