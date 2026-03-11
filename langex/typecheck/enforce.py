@@ -1,6 +1,6 @@
 from langex.core.use import access_langex
 
-def get_typehints(func):
+def _get_typehints(func):
   lnx = access_langex(func)
   typehints = lnx.callable_meta.typehints
   typehints.has_typehints = True
@@ -14,7 +14,7 @@ def _match_type(instance, type_class):
   return isinstance(instance, type_class)
 
 def _validate_pos_args(func, *args):
-  typehints = get_typehints(func)
+  typehints = _get_typehints(func)
 
   if not typehints.has_pos_args:
     return []
@@ -38,7 +38,7 @@ def _validate_pos_args(func, *args):
   return failing_checks
 
 def _validate_kw_args(func, **kwargs):
-  typehints = get_typehints(func)
+  typehints = _get_typehints(func)
 
   if not typehints.has_kw_args:
     return []
@@ -62,7 +62,7 @@ def _validate_kw_args(func, **kwargs):
   return failing_checks
 
 def _validate_extra_pos_args(func, *args):
-  typehints = get_typehints(func)
+  typehints = _get_typehints(func)
 
   if not typehints.has_pos_args_list:
     return []
@@ -92,7 +92,7 @@ def _validate_extra_pos_args(func, *args):
   return failing_checks
 
 def _validate_extra_kw_args(func, **kwargs):
-  typehints = get_typehints(func)
+  typehints = _get_typehints(func)
 
   if not typehints.has_kw_args_dict:
     return []
@@ -123,7 +123,7 @@ def _validate_extra_kw_args(func, **kwargs):
   return failing_checks
 
 def _validate_args(func, *args, **kwargs):
-  typehints = get_typehints(func)
+  typehints = _get_typehints(func)
 
   if not typehints.has_typehints:
     return []
@@ -137,7 +137,7 @@ def _validate_args(func, *args, **kwargs):
   return failing_checks
 
 def _validate_return(func, result):
-  typehints = get_typehints(func)
+  typehints = _get_typehints(func)
 
   if not typehints.has_return_type:
     return []
