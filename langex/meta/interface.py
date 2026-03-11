@@ -1,5 +1,5 @@
 from langex.core.use import access_langex, use_langex
-from langex.immediate import immediate
+from langex.meta.immediate import immediate
 
 @immediate
 def _ignored_attributes():
