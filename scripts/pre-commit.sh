@@ -1,2 +1,2 @@
-python -m formatter.fmt .
+cutypy .
 git add .

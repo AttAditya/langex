@@ -2,7 +2,7 @@ source ./.venv/bin/activate
 
 lnx() {
   fmt() {
-    python -m formatter.fmt $@
+    cutypy .
   }
 
   run() {
