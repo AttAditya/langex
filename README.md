@@ -58,11 +58,11 @@ If required methods are missing, validation will raise an error.
 
 ```py
 from langex.typecheck.hints import pos_args, return_type
-from langex.typecheck.enforce import enforce
+from langex.typecheck.enforce import enforce_types
 
+@enforce_types
 @pos_args(int, int)
 @return_type(int)
-@enforce
 def add(a, b):
   return a + b
 ```
