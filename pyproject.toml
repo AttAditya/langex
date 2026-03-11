@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langex"
-version = "0.1.7"
+version = "0.1.8"
 description = "Extended Language Support for Python"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -12,6 +12,29 @@ requires-python = ">=3.14"
 authors = [
   { name = "AttAditya" }
 ]
+
+keywords = [
+  "python",
+  "decorators",
+  "type-checking",
+  "runtime-validation",
+  "language-tools"
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.14",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries"
+]
+
+[project.urls]
+Homepage = "https://github.com/AttAditya/langex"
+Repository = "https://github.com/AttAditya/langex"
+Issues = "https://github.com/AttAditya/langex/issues"
 
 [project.scripts]
 langex = "langex.__main__:main"
