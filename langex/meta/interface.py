@@ -1,4 +1,4 @@
-from langex.core.use import access_langex, use_langex
+from langex.core import access_langex, use_langex
 from langex.meta.immediate import immediate
 
 @immediate

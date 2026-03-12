@@ -1,4 +1,4 @@
-from langex.core.use import access_langex
+from langex.core import access_langex
 
 def _get_typehints(func):
   lnx = access_langex(func)
