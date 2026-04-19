@@ -8,6 +8,12 @@ __all__ = [
   "implements",
 ]
 
+def langex_class(cls):
+  if isinstance(cls, ClassMeta):
+    return cls
+
+  return ClassMeta(cls)
+
 def interface(cls):
   cls_meta = ClassMeta(cls)
   cls_meta.is_interface = True
@@ -39,7 +45,12 @@ def implements(*interfaces):
     class_meta = ClassMeta(cls)
 
     for interface in interfaces:
-      interface = ClassMeta(interface)
+      if not isinstance(interface, ClassMeta):
+        raise ValidationError({
+          "target": cls.__name__,
+          "source": interface.__name__,
+          "reason": "Source is not a class"
+        })
 
       if not interface.is_interface:
         raise ValidationError({
@@ -49,6 +60,7 @@ def implements(*interfaces):
         })
 
       interface.methods_meta.impose(class_meta.cls)
+      class_meta.ancestors.add(interface)
 
     return class_meta
 

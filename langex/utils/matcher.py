@@ -8,7 +8,13 @@ def matches_type(
   if arg_type == callable:
     return callable(received_arg)
 
-  return isinstance(received_arg, arg_type)
+  if isinstance(arg_type, type):
+    return isinstance(received_arg, arg_type)
+
+  if hasattr(received_arg, "ancestors"):
+    return arg_type in received_arg.ancestors
+
+  return False
 
 def matches_any_type(
   received_arg: object,
