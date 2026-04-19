@@ -2,6 +2,12 @@ from langex.classes.class_meta import ClassMeta
 from langex.errors.validation import ValidationError
 from langex.utils.extracter import extract_methods
 
+__all__ = [
+  "interface",
+  "abstract",
+  "implements",
+]
+
 def interface(cls):
   cls_meta = ClassMeta(cls)
   cls_meta.is_interface = True
