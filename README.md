@@ -87,13 +87,17 @@ langex
 ├── __main__.py
 ├── classes
 │   ├── __init__.py
-│   └── class_meta.py
+│   ├── class_meta.py
+│   └── methods_meta.py
 ├── core
 │   ├── __init__.py
+│   ├── classes.py
 │   └── functions.py
 ├── errors
 │   ├── __init__.py
+│   ├── instantiation.py
 │   ├── langex.py
+│   ├── unimplemented.py
 │   └── validation.py
 ├── functions
 │   ├── __init__.py
@@ -103,6 +107,7 @@ langex
 │   └── signature.py
 ├── utils
 │   ├── __init__.py
+│   ├── extracter.py
 │   └── matcher.py
 └── validation
     ├── __init__.py
