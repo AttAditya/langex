@@ -16,10 +16,11 @@ class FunctionMeta:
       self.owner = None
 
   def __call__(self, *args, **kwargs):
+    self.signature.args.validate(args, kwargs)
+
     if self.owner:
       args = (self.owner,) + args
 
-    self.signature.args.validate(args, kwargs)
     result = self.func(*args, **kwargs)
     self.signature.returns.validate(result)
 
