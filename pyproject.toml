@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langex"
-version = "0.1.9"
+version = "0.2.0"
 description = "Extended Language Support for Python"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 authors = [
   { name = "AttAditya" }
 ]
@@ -23,7 +23,7 @@ keywords = [
 
 classifiers = [
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.12",
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Development Status :: 3 - Alpha",

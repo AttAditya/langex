@@ -1,0 +1,4 @@
+class Validator:
+  def validate(self) -> None:
+    ...
+

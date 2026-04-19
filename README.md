@@ -57,14 +57,15 @@ If required methods are missing, validation will raise an error.
 ### Runtime Type Enforcement
 
 ```py
-from langex.typecheck.hints import pos_args, return_type
-from langex.typecheck.enforce import enforce_types
+from langex.core.functions import args_required, returns
 
-@enforce_types
-@pos_args(int, int)
-@return_type(int)
+@args_required(int, int)
+@returns(int)
 def add(a, b):
   return a + b
+
+print(add(1, 2)) # prints the integer 3 in console
+print(add("1", "2")) # raises Langex Validation Error
 ```
 
 LangEx records type metadata and enforces it when the function is executed.
@@ -75,37 +76,49 @@ LangEx records type metadata and enforces it when the function is executed.
 langex
 ├── __init__.py
 ├── __main__.py
+├── classes
+│   ├── __init__.py
+│   └── class_meta.py
 ├── core
-│   ├── __init__.py
-│   ├── callable_meta.py
-│   ├── class_meta.py
-│   ├── meta.py
-│   ├── object_meta.py
-│   └── use.py
-├── meta
-│   ├── __init__.py
-│   ├── immediate.py
-│   └── interface.py
-└── typecheck
+│   ├── __init__.py
+│   └── functions.py
+├── errors
+│   ├── __init__.py
+│   ├── langex.py
+│   └── validation.py
+├── functions
+│   ├── __init__.py
+│   ├── args_meta.py
+│   ├── function_meta.py
+│   ├── returns_meta.py
+│   └── signature.py
+├── utils
+│   ├── __init__.py
+│   └── matcher.py
+└── validation
     ├── __init__.py
-    ├── enforce.py
-    └── hints.py
+    ├── kw_args_validator.py
+    ├── pos_args_validator.py
+    ├── returns_validator.py
+    └── validator.py
 ```
 
-The **core** module provides internal abstractions for inspecting Python objects and extracting structured metadata used by higher-level utilities.
+### Module Overview
 
-The **meta** module provides language-style constructs such as interfaces and structural validation helpers.
-
-The **typecheck** module provides decorators and runtime enforcement tools for validating function arguments and return values based on declared metadata.
+- The **core** module contains the core decorators and utilities for language extensions.
+- The **classes** module contains tools for class inspection and interface-like constructs.
+- The **functions** module contains tools for function metadata and signature inspection.
+- The **validation** modules contain logic for validating function arguments and return values at runtime.
+- The **utils** module contains helper functions for type matching and other utilities.
+- The **errors** module defines custom exceptions for validation and other errors.
 
 ## Design Philosophy
 
 LangEx is designed around a few principles:
 
-- Pure Python implementation  
-- Minimal runtime overhead  
-- Explicit developer intent  
-- Small composable language utilities  
+- Pure Python implementation
+- Explicit developer intent
+- Small composable language utilities
 
 Rather than acting as a framework, LangEx provides foundational language tools that can be used to build higher-level abstractions.
 
