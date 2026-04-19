@@ -97,6 +97,7 @@ langex
 │   ├── __init__.py
 │   ├── instantiation.py
 │   ├── langex.py
+│   ├── misapplication.py
 │   ├── unimplemented.py
 │   └── validation.py
 ├── functions
