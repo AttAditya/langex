@@ -27,32 +27,41 @@ The project builds small language utilities that operate on Python objects (func
 
 ## Example
 
-### Defining an Interface
+### Defining and using an Interface
 
 ```py
-from langex.meta.interface import interface
+from langex.core.classes import implements, interface
+from langex.core.functions import args_required, returns
 
 @interface
-class Repository:
-  def save(self, data): ...
-  def get(self, id): ...
-```
-
-### Implementing the Interface
-
-```py
-from langex.meta.interface import implements
-
-@implements(Repository)
-class UserRepository:
-  def save(self, data):
+class InterfaceClass:
+  @args_required(object, int)
+  @returns(int)
+  def method1(self, a: int) -> int:
     ...
 
-  def get(self, id):
+  @args_required(object, str)
+  @returns(str)
+  def method2(self, b: str) -> str:
     ...
-```
 
-If required methods are missing, validation will raise an error.
+@implements(InterfaceClass)
+class ImplementationClass:
+  def __init__(self, factor):
+    self.factor = factor
+
+  def method1(self, a: int) -> int:
+    return a * self.factor
+
+  def method2(self, b: str) -> str:
+    return b.upper() * self.factor
+
+instance = ImplementationClass(3)
+print(instance.method1(5)) # prints 15 in console
+print(instance.method2("hi")) # prints "HIHIHI" in console
+print(instance.method1("5")) # raises Langex Validation Error
+print(instance.method2(5)) # raises Langex Validation Error
+```
 
 ### Runtime Type Enforcement
 

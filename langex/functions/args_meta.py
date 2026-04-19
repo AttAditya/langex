@@ -51,6 +51,22 @@ class Args:
 
     self.dynamic_keyword.add(arg_type)
 
+  def clone(self):
+    new_args = Args()
+    new_args.has_args = self.has_args
+    new_args.positional = self.positional.copy()
+    new_args.keyword = self.keyword.copy()
+    new_args.optional_positional = self.optional_positional.copy()
+    new_args.optional_keyword = self.optional_keyword.copy()
+
+    if self.dynamic_positional is not None:
+      new_args.dynamic_positional = self.dynamic_positional.copy()
+
+    if self.dynamic_keyword is not None:
+      new_args.dynamic_keyword = self.dynamic_keyword.copy()
+
+    return new_args
+
   def validate(
     self,
     pos_args: list[object],

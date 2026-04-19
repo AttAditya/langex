@@ -11,6 +11,13 @@ class Returns:
     self.has_return = True
     self.return_type = return_type
 
+  def clone(self):
+    new_returns = Returns()
+    new_returns.has_return = self.has_return
+    new_returns.return_type = self.return_type
+
+    return new_returns
+
   def validate(self, returned_value: object):
     ReturnsValidator(self, returned_value).validate()
 

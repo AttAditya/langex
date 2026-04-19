@@ -6,6 +6,12 @@ def _prepare_function(func):
 
   return func
 
+def abstracted(func):
+  func = _prepare_function(func)
+  func.is_abstract = True
+
+  return func
+
 def args_required(*arg_types: object):
   def decorator(func):
     func = _prepare_function(func)
