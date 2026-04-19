@@ -35,12 +35,12 @@ from langex.core.functions import args_required, returns
 
 @interface
 class InterfaceClass:
-  @args_required(object, int)
+  @args_required(int)
   @returns(int)
   def method1(self, a: int) -> int:
     ...
 
-  @args_required(object, str)
+  @args_required(str)
   @returns(str)
   def method2(self, b: str) -> str:
     ...

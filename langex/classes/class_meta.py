@@ -1,10 +1,17 @@
 from langex.classes.methods_meta import MethodsMeta
 from langex.errors.instantiation import InstantiationError
+from langex.errors.misapplication import MisapplicationError
 from langex.functions.function_meta import FunctionMeta
 from langex.utils.extracter import extract_methods
 
 class ClassMeta:
-  def __init__(self, cls):
+  def __init__(self, cls, base_classes=None, *_):
+    if base_classes is not None:
+      raise MisapplicationError({
+        "target": cls,
+        "reason": "Traditional inheritance unsupported for Langex classes"
+      })
+
     if isinstance(cls, ClassMeta):
       self.cls = cls.cls
       self.name = cls.name
