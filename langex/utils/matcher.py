@@ -16,14 +16,14 @@ def matches_type(
   if hasattr(received_arg, "ancestors"):
     if arg_type in received_arg.ancestors:
       return True
-    
+
     for ancestor in received_arg.ancestors:
       if isinstance(received_arg, ancestor.cls):
         return True
 
   if hasattr(arg_type, "cls"):
     return isinstance(received_arg, arg_type.cls)
-  
+
   return False
 
 def matches_any_type(
