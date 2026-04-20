@@ -5,19 +5,21 @@ class FunctionMeta:
   def __init__(self, func):
     if isinstance(func, FunctionMeta):
       self.name = func.name
+      self.qualname = func.qualname
       self.func = func.func
       self.signature = func.signature.clone()
       self.is_abstract = func.is_abstract
       self.owner = func.owner
     else:
       self.func = func
-      self.name = func.__qualname__
-      self.signature = Signature(self.name)
+      self.name = func.__name__
+      self.qualname = func.__qualname__
+      self.signature = Signature(self.qualname)
       self.is_abstract = False
       self.owner = None
 
   def _is_class_function(self):
-    parts = self.func.__qualname__.split(".")
+    parts = self.qualname.split(".")
 
     if len(parts) == 1:
       return False
@@ -32,7 +34,7 @@ class FunctionMeta:
     else:
       if self._is_class_function():
         raise MisapplicationError({
-          "target": self.func.__qualname__,
+          "target": self.qualname,
           "reason": "Called langex class function without langex class instance"
         })
 
