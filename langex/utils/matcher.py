@@ -1,3 +1,5 @@
+from types import UnionType
+
 def matches_type(
   received_arg: object,
   arg_type: object
@@ -8,7 +10,7 @@ def matches_type(
   if arg_type == callable:
     return callable(received_arg)
 
-  if isinstance(arg_type, type):
+  if isinstance(arg_type, type) or isinstance(arg_type, UnionType):
     return isinstance(received_arg, arg_type)
 
   if hasattr(received_arg, "ancestors"):
