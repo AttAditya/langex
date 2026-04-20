@@ -50,7 +50,8 @@ jobs:
 
           should_publish = str(local_version != pypi_version).lower()
 
-          with open("$GITHUB_OUTPUT", "a") as f:
+          import os
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
             f.write(f"publish={should_publish}\n")
           EOF
 
