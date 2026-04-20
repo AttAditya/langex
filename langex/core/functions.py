@@ -2,6 +2,7 @@ from langex.functions.function_meta import FunctionMeta
 
 __all__ = [
   "abstracted",
+  "no_args",
   "args_required",
   "args_optional",
   "args_dynamic",
@@ -20,6 +21,12 @@ def _prepare_function(func):
 def abstracted(func):
   func = _prepare_function(func)
   func.is_abstract = True
+
+  return func
+
+def no_args(func):
+  func = _prepare_function(func)
+  func.signature.args.set_no_args()
 
   return func
 

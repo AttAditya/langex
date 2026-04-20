@@ -3,6 +3,7 @@ from langex.errors.validation import ValidationError
 from langex.utils.extracter import extract_methods
 
 __all__ = [
+  "langex_class",
   "interface",
   "abstract",
   "implements",

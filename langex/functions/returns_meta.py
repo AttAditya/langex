@@ -3,7 +3,8 @@ from typing import Self
 from langex.validation.returns_validator import ReturnsValidator
 
 class Returns:
-  def __init__(self):
+  def __init__(self, func_name: str):
+    self.func_name = func_name
     self.has_return = False
     self.return_type = None
 
@@ -12,7 +13,7 @@ class Returns:
     self.return_type = return_type
 
   def clone(self):
-    new_returns = Returns()
+    new_returns = Returns(self.func_name)
     new_returns.has_return = self.has_return
     new_returns.return_type = self.return_type
 

@@ -37,6 +37,7 @@ class KeywordArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
+          "target": self.args.func_name,
           "message": f"Argument type mismatch",
           "argument type": arg_type.__name__,
           "received type": type(received_arg).__name__,
@@ -45,6 +46,7 @@ class KeywordArgsValidator(Validator):
 
     if len(missing_args) > 0:
       raise ValidationError({
+        "target": self.args.func_name,
         "message": "Missing required keyword arguments",
         "missing arguments": missing_args
       })
@@ -58,6 +60,7 @@ class KeywordArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
+          "target": self.args.func_name,
           "message": f"Argument type mismatch",
           "argument type": arg_type.__name__,
           "received type": type(received_arg).__name__,
@@ -70,6 +73,7 @@ class KeywordArgsValidator(Validator):
 
     if self.dynamic is None:
       raise ValidationError({
+        "target": self.args.func_name,
         "message": "Dynamic keyword arguments not allowed",
         "additional": dynamic_args
       })
@@ -77,6 +81,7 @@ class KeywordArgsValidator(Validator):
     for keyword, received_arg in dynamic_args.items():
       if not matches_any_type(received_arg, self.dynamic):
         raise ValidationError({
+          "target": self.args.func_name,
           "message": f"Argument type mismatch",
           "allowed types": {cls.__name__ for cls in self.dynamic},
           "received type": type(received_arg).__name__,

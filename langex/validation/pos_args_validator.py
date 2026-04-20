@@ -28,6 +28,7 @@ class PositionalArgsValidator(Validator):
   def _validate_required(self, required_args: list[object]):
     if len(required_args) < len(self.required):
       raise ValidationError({
+        "target": self.args.func_name,
         "message": "Not enough positional arguments",
         "expected length": len(self.required),
         "received length": len(required_args)
@@ -38,6 +39,7 @@ class PositionalArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
+          "target": self.args.func_name,
           "message": f"Argument type mismatch",
           "argument type": arg_type.__name__,
           "received type": type(received_arg).__name__,
@@ -55,6 +57,7 @@ class PositionalArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
+          "target": self.args.func_name,
           "message": f"Argument type mismatch",
           "argument type": arg_type.__name__,
           "received type": type(received_arg).__name__,
@@ -69,6 +72,7 @@ class PositionalArgsValidator(Validator):
 
     if self.dynamic is None:
       raise ValidationError({
+        "target": self.args.func_name,
         "message": "Dynamic positional arguments not allowed",
         "max length": offset_idx,
         "received length": len(self.received_args)
@@ -77,6 +81,7 @@ class PositionalArgsValidator(Validator):
     for idx, received_arg in enumerate(dynamic_args):
       if not matches_any_type(received_arg, self.dynamic):
         raise ValidationError({
+          "target": self.args.func_name,
           "message": f"Argument type mismatch",
           "allowed types": {cls.__name__ for cls in self.dynamic},
           "received type": type(received_arg).__name__,

@@ -18,6 +18,7 @@ class ReturnsValidator(Validator):
       return
 
     raise ValidationError({
+      "target": self.returns.func_name,
       "message": "Return type mismatch",
       "expected type": self.returns.return_type.__name__,
       "received type": type(self.returned_value).__name__

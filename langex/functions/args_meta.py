@@ -1,5 +1,6 @@
 from typing import Self
 
+from langex.errors.misapplication import MisapplicationError
 from langex.validation.kw_args_validator import KeywordArgsValidator
 from langex.validation.pos_args_validator import PositionalArgsValidator
 
@@ -10,8 +11,10 @@ from langex.utils.matcher import (
 )
 
 class Args:
-  def __init__(self):
+  def __init__(self, func_name: str):
+    self.func_name = func_name
     self.has_args = False
+    self.no_args = False
     self.positional: list[object] = []
     self.keyword: dict[str, object] = {}
     self.optional_positional: list[object] = []
@@ -20,22 +23,52 @@ class Args:
     self.dynamic_keyword: set[object] | None = None
 
   def add_positional(self, arg_type: object):
+    if self.no_args:
+      raise MisapplicationError({
+        "target": self.func_name,
+        "reason": "Contradicting Args Configuration"
+      })
+
     self.has_args = True
     self.positional.append(arg_type)
 
   def add_keyword(self, name: str, arg_type: object):
+    if self.no_args:
+      raise MisapplicationError({
+        "target": self.func_name,
+        "reason": "Contradicting Args Configuration"
+      })
+
     self.has_args = True
     self.keyword[name] = arg_type
 
   def add_optional_positional(self, arg_type: object):
+    if self.no_args:
+      raise MisapplicationError({
+        "target": self.func_name,
+        "reason": "Contradicting Args Configuration"
+      })
+
     self.has_args = True
     self.optional_positional.append(arg_type)
 
   def add_optional_keyword(self, name: str, arg_type: object):
+    if self.no_args:
+      raise MisapplicationError({
+        "target": self.func_name,
+        "reason": "Contradicting Args Configuration"
+      })
+
     self.has_args = True
     self.optional_keyword[name] = arg_type
 
   def add_dynamic_positional(self, arg_type: object):
+    if self.no_args:
+      raise MisapplicationError({
+        "target": self.func_name,
+        "reason": "Contradicting Args Configuration"
+      })
+
     self.has_args = True
 
     if self.dynamic_positional is None:
@@ -44,6 +77,12 @@ class Args:
     self.dynamic_positional.add(arg_type)
 
   def add_dynamic_keyword(self, arg_type: object):
+    if self.no_args:
+      raise MisapplicationError({
+        "target": self.func_name,
+        "reason": "Contradicting Args Configuration"
+      })
+
     self.has_args = True
 
     if self.dynamic_keyword is None:
@@ -51,8 +90,18 @@ class Args:
 
     self.dynamic_keyword.add(arg_type)
 
+  def set_no_args(self):
+    if self.has_args:
+      raise MisapplicationError({
+        "target": self.func_name,
+        "reason": "Contradicting Args Configuration"
+      })
+
+    self.has_args = True
+    self.no_args = True
+
   def clone(self):
-    new_args = Args()
+    new_args = Args(self.func_name)
     new_args.has_args = self.has_args
     new_args.positional = self.positional.copy()
     new_args.keyword = self.keyword.copy()

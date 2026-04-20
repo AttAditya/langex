@@ -11,8 +11,8 @@ class FunctionMeta:
       self.owner = func.owner
     else:
       self.func = func
-      self.name = func.__name__
-      self.signature = Signature()
+      self.name = func.__qualname__
+      self.signature = Signature(self.name)
       self.is_abstract = False
       self.owner = None
 
