@@ -9,6 +9,11 @@ class LANGEX:
     INTERFACE = "interface"
     ABSTRACT = "abstract"
 
+  class METHOD_TYPE:
+    UNSET = "unset"
+    IMPLEMENTED = "implemented"
+    ABSTRACTED = "abstracted"
+
   class ATTACKED_ATTRS:
     NEW = "__new__"
     RETURN = "return"

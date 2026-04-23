@@ -22,7 +22,10 @@ class SignatureParser:
     count = code.co_argcount
     found = varnames[:count]
     defaults = len(self.func.__defaults__ or ())
-    optional = {*varnames[-defaults:]}
+    optional = set()
+
+    if defaults:
+      optional = {*varnames[-defaults:]}
 
     for arg in found:
       arg_type = annots.get(arg, object)

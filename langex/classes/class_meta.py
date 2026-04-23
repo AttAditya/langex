@@ -57,6 +57,9 @@ class ClassMeta:
       if method_name in self.methods.abstracted:
         signature = self.methods.abstracted[method_name]
 
+      if signature.args.positional:
+        signature.args.positional.pop(0)
+
       method.signature = signature
       method.func = func_ref.__get__(instance, self.cls)
       setattr(instance, method_name, method)
@@ -115,48 +118,110 @@ class ClassMeta:
 
     return self.cls
 
-  def implement(self, source: type):
-    if not hasattr(source, LANGEX.MARKER):
-      raise MisapplicationError({
-        LABELS.REF.SELF: self.qual,
-        LABELS.REF.PEER: source.__qualname__,
-        LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_IS_NOT_Y.format(
-          X=LABELS.REF.PEER,
-          Y=LABELS.CLASS_NOUNS.LANGEX_CLASS
-        )
-      })
+  def _validate_source(self, source: type):
+    if hasattr(source, LANGEX.MARKER):
+      return
 
+    raise MisapplicationError({
+      LABELS.REF.SELF: self.qual,
+      LABELS.REF.PEER: source.__qualname__,
+      LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_IS_NOT_Y.format(
+        X=LABELS.REF.PEER,
+        Y=LABELS.CLASS_NOUNS.LANGEX_CLASS
+      )
+    })
+
+  def _validate_interface(self, source: type):
+    self._validate_source(source)
     interface: ClassMeta = getattr(source, LANGEX.CLASS_META)
 
-    if not interface.is_interface():
-      raise ValidationError({
-        LABELS.REF.SELF: self.qual,
-        LABELS.REF.PEER: interface.qual,
-        LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_IS_NOT_Y.format(
-          X=LABELS.REF.PEER,
-          Y=LABELS.CLASS_NOUNS.INTERFACE_CLASS
-        )
-      })
+    if interface.is_interface():
+      return
 
-    existing_methods = set()
+    raise ValidationError({
+      LABELS.REF.SELF: self.qual,
+      LABELS.REF.PEER: interface.qual,
+      LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_IS_NOT_Y.format(
+        X=LABELS.REF.PEER,
+        Y=LABELS.CLASS_NOUNS.INTERFACE_CLASS
+      )
+    })
+
+  def _get_missing_methods(
+    self,
+    source: type,
+    method_type: str
+  ) -> set[str]:
+    meta: ClassMeta = getattr(source, LANGEX.CLASS_META)
+    target_methods: set[str] = set()
+
+    if method_type == LANGEX.METHOD_TYPE.ABSTRACTED:
+      target_methods = set(meta.methods.abstracted.keys())
+
+    if method_type == LANGEX.METHOD_TYPE.IMPLEMENTED:
+      target_methods = set(meta.methods.implemented.keys())
+
+    existing_methods: set[str] = set()
     existing_methods |= set(self.methods.abstracted.keys())
     existing_methods |= set(self.methods.implemented.keys())
-    imposing_methods = set(interface.methods.abstracted.keys())
-    missing_methods = imposing_methods - existing_methods
+    missing_methods = target_methods - existing_methods
+
+    return missing_methods
+
+  def _abstraction_check(self, source: type):
+    class_meta: ClassMeta = getattr(source, LANGEX.CLASS_META)
+    missing_methods = self._get_missing_methods(
+      source, LANGEX.METHOD_TYPE.ABSTRACTED
+    )
 
     if missing_methods:
       raise UnimplementedError({
         LABELS.REF.SELF: self.qual,
-        LABELS.REF.PEER: interface.qual,
+        LABELS.REF.PEER: class_meta.qual,
         LABELS.CAUSE.MISSING: missing_methods,
         LABELS.CAUSE.REASON: CONTENTS.ERRORS.MISSING_X.format(
           X=LABELS.FUNC_NOUNS.PEER_METHON_IMPL
         )
       })
 
+  def implement(self, source: type):
+    self._validate_interface(source)
+    self._abstraction_check(source)
+    interface: ClassMeta = getattr(source, LANGEX.CLASS_META)
+    imposing_methods = set(interface.methods.abstracted.keys())
+
     for method_name in imposing_methods:
       signature = interface.methods.abstracted[method_name]
       self.methods.implemented[method_name] = signature
 
     self.follows.add(interface.cls)
+
+  def extend(self, source: type):
+    self._validate_source(source)
+    parent: ClassMeta = getattr(source, LANGEX.CLASS_META)
+    extending_methods = self._get_missing_methods(
+      source, LANGEX.METHOD_TYPE.IMPLEMENTED
+    )
+
+    for method_name in extending_methods:
+      method = getattr(source, method_name)
+      signature = parent.methods.implemented[method_name]
+      self.methods.implemented[method_name] = signature
+      setattr(self.cls, method_name, method)
+
+    imposing_abs_methods = set(parent.methods.abstracted.keys())
+    imposing_imp_methods = set(parent.methods.implemented.keys())
+
+    for method_name in imposing_abs_methods:
+      signature = parent.methods.abstracted[method_name]
+      self.methods.implemented[method_name] = signature
+
+    for method_name in imposing_imp_methods:
+      signature = parent.methods.implemented[method_name]
+      self.methods.implemented[method_name] = signature
+
+    if not self.is_abstract():
+      self._abstraction_check(source)
+
+    self.follows.add(parent.cls)
 
