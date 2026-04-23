@@ -1,5 +1,5 @@
-from langex.errors.misapplication import MisapplicationError
 from langex.functions.signature import Signature
+from langex.functions.signature_parser import SignatureParser
 from langex.registry import LANGEX
 
 class FunctionMeta:
@@ -32,4 +32,8 @@ class FunctionMeta:
     self.signature.returns.validate(result)
 
     return result
+
+  def detect_signature(self):
+    parser = SignatureParser(self.func, self.qual)
+    self.signature = parser.parse()
 
