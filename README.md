@@ -1,6 +1,8 @@
-# [LangEx](https://pypi.org/project/langex/)
+# [LangEx](https://pypi.org/project/langex/) 
 
 Extended Language Support for Python
+
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpypi.org%2Fpypi%2Flangex%2Fjson&query=info.version&prefix=v&style=for-the-badge&logo=pypi&logoColor=%23ffffff&label=PyPI%20Release&labelColor=%230073b7&color=%23ffffff&link=https%3A%2F%2Fpypi.org%2Fproject%2Flangex%2F)
 
 ## Installation
 
@@ -77,8 +79,6 @@ print(add(1, 2)) # prints the integer 3 in console
 print(add("1", "2")) # raises Langex Validation Error
 ```
 
-LangEx records type metadata and enforces it when the function is executed.
-
 ## Project Structure
 
 ```tree
@@ -89,6 +89,11 @@ langex
 │   ├── __init__.py
 │   ├── class_meta.py
 │   └── methods_meta.py
+├── constants
+│   ├── __init__.py
+│   ├── contents.py
+│   ├── keys.py
+│   └── labels.py
 ├── core
 │   ├── __init__.py
 │   ├── classes.py
@@ -105,7 +110,8 @@ langex
 │   ├── args_meta.py
 │   ├── function_meta.py
 │   ├── returns_meta.py
-│   └── signature.py
+│   ├── signature.py
+│   └── signature_parser.py
 ├── utils
 │   ├── __init__.py
 │   ├── extracter.py
@@ -121,6 +127,7 @@ langex
 ### Module Overview
 
 - The **core** module contains the core decorators and utilities for language extensions.
+- The **constants** module contains constant strings and keys used across the project for metadata, attributes and validation.
 - The **classes** module contains tools for class inspection and interface-like constructs.
 - The **functions** module contains tools for function metadata and signature inspection.
 - The **validation** modules contain logic for validating function arguments and return values at runtime.
