@@ -1,25 +1,25 @@
 from langex.errors.misapplication import MisapplicationError
 from langex.functions.signature import Signature
+from langex.registry import LANGEX
 
 class FunctionMeta:
   def __init__(self, func):
-    if isinstance(func, FunctionMeta):
-      self.name = func.name
-      self.qualname = func.qualname
-      self.func = func.func
-      self.signature = func.signature.clone()
-      self.is_abstract = func.is_abstract
-      self.owner = func.owner
-    else:
-      self.func = func
-      self.name = func.__name__
-      self.qualname = func.__qualname__
-      self.signature = Signature(self.qualname)
-      self.is_abstract = False
-      self.owner = None
+    if hasattr(func, LANGEX.MARKER):
+      return
+
+    self.func = func
+    self.name = func.__name__
+    self.qual = func.__qualname__
+    self.signature = Signature(self.qual)
+    self.is_abstract = False
+    self._inject()
+
+  def _inject(self):
+    setattr(self, LANGEX.MARKER, True)
+    setattr(self, LANGEX.FUNC_META, self)
 
   def _is_class_function(self):
-    parts = self.qualname.split(".")
+    parts = self.qual.split(".")
 
     if len(parts) == 1:
       return False
@@ -28,16 +28,6 @@ class FunctionMeta:
 
   def __call__(self, *args, **kwargs):
     self.signature.args.validate(args, kwargs)
-
-    if self.owner:
-      args = (self.owner,) + args
-    else:
-      if self._is_class_function():
-        raise MisapplicationError({
-          "target": self.qualname,
-          "reason": "Called langex class function without langex class instance"
-        })
-
     result = self.func(*args, **kwargs)
     self.signature.returns.validate(result)
 
