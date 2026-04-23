@@ -11,6 +11,16 @@ from langex.utils.extracter import extract_methods
 
 class ClassMeta:
   def __init__(self, cls: type):
+    if type(cls) != type:
+      raise MisapplicationError({
+        LABELS.REF.SELF: cls.__qualname__,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.REF.SELF
+        ),
+        LABELS.CAUSE.EXPECTED: LABELS.CLASS_NOUNS.CLASS_TYPE,
+        LABELS.CAUSE.RECEIVED: type(cls).__name__,
+      })
+
     self.cls = cls
     self.name = cls.__name__
     self.qual = cls.__qualname__

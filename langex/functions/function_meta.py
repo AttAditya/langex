@@ -1,11 +1,29 @@
+from langex.constants.contents import CONTENTS
 from langex.constants.keys import LANGEX
+from langex.constants.labels import LABELS
+from langex.errors.misapplication import MisapplicationError
 from langex.functions.signature import Signature
 from langex.functions.signature_parser import SignatureParser
 
 class FunctionMeta:
   def __init__(self, func):
-    if hasattr(func, LANGEX.MARKER):
+    if hasattr(func, LANGEX.FUNC_META):
       return
+
+    if type(func) != type(lambda: None):
+      arg_type = type(func).__name__
+
+      if arg_type == "type":
+        arg_type = LABELS.CLASS_NOUNS.CLASS_TYPE
+
+      raise MisapplicationError({
+        LABELS.REF.SELF: func.__qualname__,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_TYPE
+        ),
+        LABELS.CAUSE.EXPECTED: LABELS.FUNC_NOUNS.FUNC_TYPE,
+        LABELS.CAUSE.RECEIVED: arg_type,
+      })
 
     self.func = func
     self.name = func.__name__
