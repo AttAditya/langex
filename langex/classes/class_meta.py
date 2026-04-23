@@ -1,10 +1,10 @@
 from langex.classes.methods_meta import MethodsMeta
+from langex.constants.keys import LANGEX
 from langex.errors.instantiation import InstantiationError
 from langex.errors.misapplication import MisapplicationError
 from langex.errors.unimplemented import UnimplementedError
 from langex.errors.validation import ValidationError
 from langex.functions.function_meta import FunctionMeta
-from langex.constants.keys import LANGEX
 from langex.utils.extracter import extract_methods
 
 class ClassMeta:

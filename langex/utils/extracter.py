@@ -1,5 +1,5 @@
-from langex.functions.function_meta import FunctionMeta
 from langex.constants.keys import LANGEX
+from langex.functions.function_meta import FunctionMeta
 
 def extract_methods(cls: type | object) -> dict[str, FunctionMeta]:
   methods = {}
