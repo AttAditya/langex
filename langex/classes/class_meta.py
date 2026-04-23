@@ -1,5 +1,7 @@
 from langex.classes.methods_meta import MethodsMeta
+from langex.constants.contents import CONTENTS
 from langex.constants.keys import LANGEX
+from langex.constants.labels import LABELS
 from langex.errors.instantiation import InstantiationError
 from langex.errors.misapplication import MisapplicationError
 from langex.errors.unimplemented import UnimplementedError
@@ -12,7 +14,7 @@ class ClassMeta:
     self.cls = cls
     self.name = cls.__name__
     self.qual = cls.__qualname__
-    self.instanciate = cls.__new__
+    self.instanciate = getattr(cls, LANGEX.ATTACKED_ATTRS.NEW)
     self.class_type = LANGEX.CLASS_TYPE.UNSET
     self.follows: set[ClassMeta] = set()
     self.methods = MethodsMeta(self)
@@ -21,17 +23,25 @@ class ClassMeta:
   def _create_class_instance(self, *args, **kwargs):
     if self.is_interface():
       raise InstantiationError({
-        "target": self.qual,
-        "reason": "Cannot instanciate langex interface class"
+        LABELS.REF.SELF: self.qual,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CANNOT_A_X.format(
+          A=LABELS.ACTS.INSTANTIATE,
+          X=LABELS.CLASS_NOUNS.INTERFACE_CLASS
+        )
       })
 
     if self.is_abstract():
       raise InstantiationError({
-        "target": self.qual,
-        "reason": "Cannot instanciate langex abstract class"
+        LABELS.REF.SELF: self.qual,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CANNOT_A_X.format(
+          A=LABELS.ACTS.INSTANTIATE,
+          X=LABELS.CLASS_NOUNS.ABSTRACT_CLASS
+        )
       })
 
-    instance = object.__new__(*args, **kwargs)
+    args = args[1:]
+    instance = object.__new__(self.cls)
+    instance.__init__(*args, **kwargs)
     setattr(instance, LANGEX.MARKER, True)
     setattr(instance, LANGEX.CLASS_META, self)
     methods = extract_methods(self.cls)
@@ -48,10 +58,7 @@ class ClassMeta:
         signature = self.methods.abstracted[method_name]
 
       method.signature = signature
-      method.func = lambda *a, **k: func_ref(
-        instance, *a, **k
-      )
-
+      method.func = func_ref.__get__(instance, self.cls)
       setattr(instance, method_name, method)
 
     return instance
@@ -59,7 +66,11 @@ class ClassMeta:
   def _inject(self):
     setattr(self.cls, LANGEX.MARKER, True)
     setattr(self.cls, LANGEX.CLASS_META, self)
-    setattr(self.cls, "__new__", self._create_class_instance)
+    setattr(
+      self.cls,
+      LANGEX.ATTACKED_ATTRS.NEW,
+      self._create_class_instance
+    )
 
   def is_interface(self) -> bool:
     return self.class_type == LANGEX.CLASS_TYPE.INTERFACE
@@ -107,18 +118,24 @@ class ClassMeta:
   def implement(self, source: type):
     if not hasattr(source, LANGEX.MARKER):
       raise MisapplicationError({
-        "target": self.qual,
-        "source": source.__qualname__,
-        "reason": "Source is not a langex class"
+        LABELS.REF.SELF: self.qual,
+        LABELS.REF.PEER: source.__qualname__,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_IS_NOT_Y.format(
+          X=LABELS.REF.PEER,
+          Y=LABELS.CLASS_NOUNS.LANGEX_CLASS
+        )
       })
 
     interface: ClassMeta = getattr(source, LANGEX.CLASS_META)
 
     if not interface.is_interface():
       raise ValidationError({
-        "target": self.qual,
-        "source": interface.qual,
-        "reason": "Source is not an interface"
+        LABELS.REF.SELF: self.qual,
+        LABELS.REF.PEER: interface.qual,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_IS_NOT_Y.format(
+          X=LABELS.REF.PEER,
+          Y=LABELS.CLASS_NOUNS.INTERFACE_CLASS
+        )
       })
 
     existing_methods = set()
@@ -129,10 +146,12 @@ class ClassMeta:
 
     if missing_methods:
       raise UnimplementedError({
-        "target": self.qual,
-        "source": interface.qual,
-        "missing": missing_methods,
-        "reason": "Missing source method implementations in target class"
+        LABELS.REF.SELF: self.qual,
+        LABELS.REF.PEER: interface.qual,
+        LABELS.CAUSE.MISSING: missing_methods,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.MISSING_X.format(
+          X=LABELS.FUNC_NOUNS.PEER_METHON_IMPL
+        )
       })
 
     for method_name in imposing_methods:

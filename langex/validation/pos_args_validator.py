@@ -1,3 +1,5 @@
+from langex.constants.contents import CONTENTS
+from langex.constants.labels import LABELS
 from langex.errors.validation import ValidationError
 from langex.utils.matcher import matches_any_type, matches_type
 from langex.validation.validator import Validator
@@ -28,10 +30,12 @@ class PositionalArgsValidator(Validator):
   def _validate_required(self, required_args: list[object]):
     if len(required_args) < len(self.required):
       raise ValidationError({
-        "target": self.args.func_name,
-        "message": "Not enough positional arguments",
-        "expected length": len(self.required),
-        "received length": len(required_args)
+        LABELS.REF.SELF: self.args.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.MISSING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS
+        ),
+        LABELS.CAUSE.EXPECTED: len(self.required),
+        LABELS.CAUSE.RECEIVED: len(required_args)
       })
 
     for idx, arg_type in enumerate(self.required):
@@ -39,11 +43,13 @@ class PositionalArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
-          "target": self.args.func_name,
-          "message": f"Argument type mismatch",
-          "argument type": arg_type.__name__,
-          "received type": type(received_arg).__name__,
-          "argument index": idx
+          LABELS.REF.SELF: self.args.func_name,
+          LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+            X=LABELS.FUNC_NOUNS.ARGS_TYPE
+          ),
+          LABELS.FUNC_NOUNS.ARGS_TYPE: arg_type.__name__,
+          LABELS.FUNC_NOUNS.RECV_TYPE: type(received_arg).__name__,
+          LABELS.FUNC_NOUNS.ARGS_IDX: idx
         })
 
   def _validate_optional(self, optional_args: list[object]):
@@ -57,11 +63,13 @@ class PositionalArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
-          "target": self.args.func_name,
-          "message": f"Argument type mismatch",
-          "argument type": arg_type.__name__,
-          "received type": type(received_arg).__name__,
-          "argument index": idx + offset_idx
+          LABELS.REF.SELF: self.args.func_name,
+          LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+            X=LABELS.FUNC_NOUNS.ARGS_TYPE
+          ),
+          LABELS.FUNC_NOUNS.ARGS_TYPE: arg_type.__name__,
+          LABELS.FUNC_NOUNS.RECV_TYPE: type(received_arg).__name__,
+          LABELS.FUNC_NOUNS.ARGS_IDX: idx + offset_idx
         })
 
   def _validate_dynamic(self, dynamic_args: list[object]):
@@ -72,20 +80,23 @@ class PositionalArgsValidator(Validator):
 
     if self.dynamic is None:
       raise ValidationError({
-        "target": self.args.func_name,
-        "message": "Dynamic positional arguments not allowed",
-        "max length": offset_idx,
-        "received length": len(self.received_args)
+        LABELS.REF.SELF: self.args.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_NOT_ALLOWED.format(
+          X=LABELS.FUNC_NOUNS.DARGS
+        ),
+        LABELS.CAUSE.RECEIVED: len(self.received_args)
       })
 
     for idx, received_arg in enumerate(dynamic_args):
       if not matches_any_type(received_arg, self.dynamic):
         raise ValidationError({
-          "target": self.args.func_name,
-          "message": f"Argument type mismatch",
-          "allowed types": {cls.__name__ for cls in self.dynamic},
-          "received type": type(received_arg).__name__,
-          "argument index": idx + offset_idx
+          LABELS.REF.SELF: self.args.func_name,
+          LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+            X=LABELS.FUNC_NOUNS.ARGS_TYPE
+          ),
+          LABELS.CAUSE.EXPECTED: {cls.__name__ for cls in self.dynamic},
+          LABELS.FUNC_NOUNS.RECV_TYPE: type(received_arg).__name__,
+          LABELS.FUNC_NOUNS.ARGS_IDX: idx + offset_idx
         })
 
   def validate(self):

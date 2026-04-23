@@ -9,3 +9,7 @@ class LANGEX:
     INTERFACE = "interface"
     ABSTRACT = "abstract"
 
+  class ATTACKED_ATTRS:
+    NEW = "__new__"
+    RETURN = "return"
+

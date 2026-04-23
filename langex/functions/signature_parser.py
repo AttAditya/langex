@@ -1,3 +1,4 @@
+from langex.constants.keys import LANGEX
 from langex.functions.signature import Signature
 
 class SignatureParser:
@@ -9,9 +10,10 @@ class SignatureParser:
 
   def _parse_returns(self):
     annots = self.func.__annotations__
+    attacked = LANGEX.ATTACKED_ATTRS.RETURN
 
-    if "return" in annots:
-      self.returns.set_return_type(annots["return"])
+    if attacked in annots:
+      self.returns.set_return_type(annots[attacked])
 
   def _parse_pos_static(self):
     annots = self.func.__annotations__

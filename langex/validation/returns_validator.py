@@ -1,3 +1,5 @@
+from langex.constants.contents import CONTENTS
+from langex.constants.labels import LABELS
 from langex.errors.validation import ValidationError
 from langex.utils.matcher import matches_type
 from langex.validation.validator import Validator
@@ -18,9 +20,11 @@ class ReturnsValidator(Validator):
       return
 
     raise ValidationError({
-      "target": self.returns.func_name,
-      "message": "Return type mismatch",
-      "expected type": self.returns.return_type.__name__,
-      "received type": type(self.returned_value).__name__
+      LABELS.REF.SELF: self.returns.func_name,
+      LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+        X=LABELS.FUNC_NOUNS.RTYPE
+      ),
+      LABELS.CAUSE.EXPECTED: self.returns.return_type.__name__,
+      LABELS.CAUSE.RECEIVED: type(self.returned_value).__name__
     })
 

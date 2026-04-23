@@ -1,5 +1,7 @@
 from typing import Self
 
+from langex.constants.contents import CONTENTS
+from langex.constants.labels import LABELS
 from langex.errors.misapplication import MisapplicationError
 from langex.validation.kw_args_validator import KeywordArgsValidator
 from langex.validation.pos_args_validator import PositionalArgsValidator
@@ -25,8 +27,10 @@ class Args:
   def add_positional(self, arg_type: object):
     if self.no_args:
       raise MisapplicationError({
-        "target": self.func_name,
-        "reason": "Contradicting Args Configuration"
+        LABELS.REF.SELF: self.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_CONF
+        )
       })
 
     self.has_args = True
@@ -35,8 +39,10 @@ class Args:
   def add_keyword(self, name: str, arg_type: object):
     if self.no_args:
       raise MisapplicationError({
-        "target": self.func_name,
-        "reason": "Contradicting Args Configuration"
+        LABELS.REF.SELF: self.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_CONF
+        )
       })
 
     self.has_args = True
@@ -45,8 +51,10 @@ class Args:
   def add_optional_positional(self, arg_type: object):
     if self.no_args:
       raise MisapplicationError({
-        "target": self.func_name,
-        "reason": "Contradicting Args Configuration"
+        LABELS.REF.SELF: self.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_CONF
+        )
       })
 
     self.has_args = True
@@ -55,8 +63,10 @@ class Args:
   def add_optional_keyword(self, name: str, arg_type: object):
     if self.no_args:
       raise MisapplicationError({
-        "target": self.func_name,
-        "reason": "Contradicting Args Configuration"
+        LABELS.REF.SELF: self.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_CONF
+        )
       })
 
     self.has_args = True
@@ -65,8 +75,10 @@ class Args:
   def add_dynamic_positional(self, arg_type: object):
     if self.no_args:
       raise MisapplicationError({
-        "target": self.func_name,
-        "reason": "Contradicting Args Configuration"
+        LABELS.REF.SELF: self.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_CONF
+        )
       })
 
     self.has_args = True
@@ -79,8 +91,10 @@ class Args:
   def add_dynamic_keyword(self, arg_type: object):
     if self.no_args:
       raise MisapplicationError({
-        "target": self.func_name,
-        "reason": "Contradicting Args Configuration"
+        LABELS.REF.SELF: self.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_CONF
+        )
       })
 
     self.has_args = True
@@ -93,8 +107,10 @@ class Args:
   def set_no_args(self):
     if self.has_args:
       raise MisapplicationError({
-        "target": self.func_name,
-        "reason": "Contradicting Args Configuration"
+        LABELS.REF.SELF: self.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_CONF
+        )
       })
 
     self.has_args = True
