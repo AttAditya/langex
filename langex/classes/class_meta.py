@@ -4,7 +4,7 @@ from langex.errors.misapplication import MisapplicationError
 from langex.errors.unimplemented import UnimplementedError
 from langex.errors.validation import ValidationError
 from langex.functions.function_meta import FunctionMeta
-from langex.registry import LANGEX
+from langex.constants.keys import LANGEX
 from langex.utils.extracter import extract_methods
 
 class ClassMeta:

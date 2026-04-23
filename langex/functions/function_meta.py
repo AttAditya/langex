@@ -1,6 +1,6 @@
 from langex.functions.signature import Signature
 from langex.functions.signature_parser import SignatureParser
-from langex.registry import LANGEX
+from langex.constants.keys import LANGEX
 
 class FunctionMeta:
   def __init__(self, func):

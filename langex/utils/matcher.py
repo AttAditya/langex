@@ -1,6 +1,6 @@
 from types import UnionType
 
-from langex.registry import LANGEX
+from langex.constants.keys import LANGEX
 
 def matches_type(
   received_arg: object,

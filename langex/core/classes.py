@@ -1,5 +1,5 @@
 from langex.classes.class_meta import ClassMeta
-from langex.registry import LANGEX
+from langex.constants.keys import LANGEX
 
 __all__ = [
   "langex_class",
