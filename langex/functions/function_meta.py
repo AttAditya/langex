@@ -37,6 +37,15 @@ class FunctionMeta:
     setattr(self, LANGEX.FUNC_META, self)
 
   def __call__(self, *args, **kwargs):
+    if self.is_abstract:
+      raise MisapplicationError({
+        LABELS.REF.SELF: self.qual,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CANNOT_A_X.format(
+          A=LABELS.ACTS.CALL,
+          X=LABELS.FUNC_NOUNS.ABS_FUNC
+        ),
+      })
+
     self.signature.args.validate(args, kwargs)
     result = self.func(*args, **kwargs)
     self.signature.returns.validate(result)

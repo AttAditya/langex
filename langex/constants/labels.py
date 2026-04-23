@@ -17,6 +17,7 @@ class LABELS:
     PRIMITIVE_CLASS = "langex primitive class"
 
   class FUNC_NOUNS:
+    ABS_FUNC = "abstract function"
     FUNC_TYPE = "function type"
     PEER_METHON_IMPL = "source method implementation"
     ARGS_CONF = "args configuration"
@@ -31,4 +32,5 @@ class LABELS:
 
   class ACTS:
     INSTANTIATE = "instantiate"
+    CALL = "call"
 
