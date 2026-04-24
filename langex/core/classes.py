@@ -1,3 +1,5 @@
+from typing import TypeVar
+
 from langex.classes.class_meta import ClassMeta
 from langex.constants.keys import LANGEX
 
@@ -11,19 +13,21 @@ __all__ = [
   "extends_bases",
 ]
 
-def langex_class(cls) -> type:
+ClassType = TypeVar("ClassType", bound=type)
+
+def langex_class(cls: ClassType) -> ClassType:
   return ClassMeta(cls).use_primitive()
 
-def interface(cls) -> type:
+def interface(cls: ClassType) -> ClassType:
   return ClassMeta(cls).use_interfacing()
 
-def abstract(cls) -> type:
+def abstract(cls: ClassType) -> ClassType:
   return ClassMeta(cls).use_abstraction()
 
-def implements_bases(cls: type) -> type:
+def implements_bases(cls: ClassType) -> ClassType:
   return implements(cls.__base__, *cls.__bases__)(cls)
 
-def implements(*interfaces: type):
+def implements(*interfaces: ClassType) -> ClassType:
   def requires_base_implements():
     if len(interfaces) != 1:
       return False
@@ -38,7 +42,7 @@ def implements(*interfaces: type):
   if requires_base_implements():
     return implements_bases(interfaces[0])
 
-  def decorator(cls: type):
+  def decorator(cls: ClassType) -> ClassType:
     meta = ClassMeta(cls)
     meta.use_primitive()
 
@@ -49,10 +53,10 @@ def implements(*interfaces: type):
 
   return decorator
 
-def extends_bases(cls: type) -> type:
+def extends_bases(cls: ClassType) -> ClassType:
   return extends(cls.__base__, *cls.__bases__)(cls)
 
-def extends(*parents: type):
+def extends(*parents: ClassType) -> ClassType:
   def requires_base_extends():
     if len(parents) != 1:
       return False
@@ -67,7 +71,7 @@ def extends(*parents: type):
   if requires_base_extends():
     return extends_bases(parents[0])
 
-  def decorator(cls: type):
+  def decorator(cls: ClassType) -> ClassType:
     meta = ClassMeta(cls)
     meta.use_primitive()
 

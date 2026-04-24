@@ -1,3 +1,5 @@
+from typing import Callable, TypeVar
+
 from langex.constants.keys import LANGEX
 from langex.functions.function_meta import FunctionMeta
 
@@ -15,13 +17,15 @@ __all__ = [
   "autosig",
 ]
 
+FuncType = TypeVar("FuncType", bound=Callable)
+
 def _prepare_function(func) -> FunctionMeta:
   if not hasattr(func, LANGEX.MARKER):
     return FunctionMeta(func)
 
   return func
 
-def langex_function(func):
+def langex_function(func: FuncType) -> FuncType:
   return _prepare_function(func)
 
 def abstracted(func):
@@ -111,7 +115,7 @@ def returns(return_type: object):
 
   return decorator
 
-def autosig(func):
+def autosig(func: FuncType) -> FuncType:
   func = _prepare_function(func)
   func.detect_signature()
 
