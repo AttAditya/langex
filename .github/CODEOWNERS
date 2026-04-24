@@ -1,1 +1,9 @@
-* @AttAditya
+.github/ @AttAditya
+ci/ @AttAditya
+scripts/ @AttAditya
+langex/ @AttAditya
+.gitignore @AttAditya
+dev.sh @AttAditya
+config.sh @AttAditya
+LICENSE @AttAditya
+

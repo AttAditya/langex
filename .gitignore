@@ -1,4 +1,4 @@
-dist/
-*.egg-info/
-__pycache__/
-.venv/
+**/__pycache__
+.DS_Store
+.venv
+

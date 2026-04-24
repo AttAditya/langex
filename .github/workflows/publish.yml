@@ -1,70 +1,23 @@
 name: Publish to PyPI
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   publish:
+    if: github.repository_owner == github.actor
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install deps
+      - name: Run publish script
         run: |
-          python -m pip install --upgrade pip
-          pip install build requests tomli
+          chmod +x ci/publish/main.sh
+          bash ci/publish/main.sh
 
-      - name: Check version mismatch
-        id: version_check
-        run: |
-          python << 'EOF'
-          import requests, tomli
-
-          with open("pyproject.toml", "rb") as f:
-            data = tomli.load(f)
-
-          name = data["project"]["name"]
-          local_version = data["project"]["version"]
-
-          try:
-            res = requests.get(f"https://pypi.org/pypi/{name}/json", timeout=5)
-            res.raise_for_status()
-            pypi_version = res.json()["info"]["version"]
-          except:
-            pypi_version = None
-
-          print("Local:", local_version)
-          print("PyPI:", pypi_version)
-
-          should_publish = str(local_version != pypi_version).lower()
-
-          import os
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-            f.write(f"publish={should_publish}\n")
-          EOF
-
-      - name: Build package
-        if: steps.version_check.outputs.publish == 'true'
-        run: python -m build
-
-      - name: Publish to PyPI
-        if: steps.version_check.outputs.publish == 'true'
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
-
-      - name: Skip publish
-        if: steps.version_check.outputs.publish != 'true'
-        run: echo "Version already exists on PyPI, skipping."
