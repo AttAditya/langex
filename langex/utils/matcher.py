@@ -1,5 +1,7 @@
 from types import UnionType
 
+from langex.constants.keys import LANGEX
+
 def matches_type(
   received_arg: object,
   arg_type: object
@@ -10,19 +12,21 @@ def matches_type(
   if arg_type == callable:
     return callable(received_arg)
 
-  if isinstance(arg_type, type) or isinstance(arg_type, UnionType):
-    return isinstance(received_arg, arg_type)
+  if hasattr(received_arg, LANGEX.MARKER):
+    class_meta = getattr(received_arg, LANGEX.CLASS_META)
 
-  if hasattr(received_arg, "ancestors"):
-    if arg_type in received_arg.ancestors:
+    if arg_type in class_meta.follows:
       return True
 
-    for ancestor in received_arg.ancestors:
-      if isinstance(received_arg, ancestor.cls):
+  if isinstance(arg_type, UnionType):
+    for union_arg_type in arg_type.__args__:
+      if matches_type(received_arg, union_arg_type):
         return True
 
-  if hasattr(arg_type, "cls"):
-    return isinstance(received_arg, arg_type.cls)
+    return False
+
+  if isinstance(arg_type, type):
+    return isinstance(received_arg, arg_type)
 
   return False
 

@@ -1,9 +1,10 @@
+from langex.constants.keys import LANGEX
 from langex.functions.function_meta import FunctionMeta
 
 def extract_methods(cls: type | object) -> dict[str, FunctionMeta]:
   methods = {}
 
-  for attr_name in dir(cls):
+  for attr_name in cls.__dict__:
     if attr_name.startswith("__"):
       continue
 
@@ -13,7 +14,10 @@ def extract_methods(cls: type | object) -> dict[str, FunctionMeta]:
     attr = getattr(cls, attr_name)
 
     if callable(attr):
-      methods[attr_name] = FunctionMeta(attr)
+      if not hasattr(attr, LANGEX.MARKER):
+        attr = FunctionMeta(attr)
+
+      methods[attr_name] = attr
 
   return methods
 

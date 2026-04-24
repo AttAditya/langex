@@ -1,3 +1,5 @@
+from langex.constants.contents import CONTENTS
+from langex.constants.labels import LABELS
 from langex.errors.validation import ValidationError
 from langex.utils.matcher import matches_any_type, matches_type
 from langex.validation.validator import Validator
@@ -37,18 +39,22 @@ class KeywordArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
-          "target": self.args.func_name,
-          "message": f"Argument type mismatch",
-          "argument type": arg_type.__name__,
-          "received type": type(received_arg).__name__,
-          "argument index": keyword
+          LABELS.REF.SELF: self.args.func_name,
+          LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+            X=LABELS.FUNC_NOUNS.ARGS_TYPE
+          ),
+          LABELS.FUNC_NOUNS.ARGS_TYPE: arg_type.__name__,
+          LABELS.FUNC_NOUNS.RECV_TYPE: type(received_arg).__name__,
+          LABELS.FUNC_NOUNS.ARGS_IDX: keyword
         })
 
     if len(missing_args) > 0:
       raise ValidationError({
-        "target": self.args.func_name,
-        "message": "Missing required keyword arguments",
-        "missing arguments": missing_args
+        LABELS.REF.SELF: self.args.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.MISSING_X.format(
+          X=LABELS.FUNC_NOUNS.KWARGS
+        ),
+        LABELS.CAUSE.MISSING: missing_args
       })
 
   def _validate_optional(self, optional_args: dict[str, object]):
@@ -60,11 +66,13 @@ class KeywordArgsValidator(Validator):
 
       if not matches_type(received_arg, arg_type):
         raise ValidationError({
-          "target": self.args.func_name,
-          "message": f"Argument type mismatch",
-          "argument type": arg_type.__name__,
-          "received type": type(received_arg).__name__,
-          "argument index": keyword
+          LABELS.REF.SELF: self.args.func_name,
+          LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+            X=LABELS.FUNC_NOUNS.ARGS_TYPE
+          ),
+          LABELS.FUNC_NOUNS.ARGS_TYPE: arg_type.__name__,
+          LABELS.FUNC_NOUNS.RECV_TYPE: type(received_arg).__name__,
+          LABELS.FUNC_NOUNS.ARGS_IDX: keyword
         })
 
   def _validate_dynamic(self, dynamic_args: dict[str, object]):
@@ -73,19 +81,23 @@ class KeywordArgsValidator(Validator):
 
     if self.dynamic is None:
       raise ValidationError({
-        "target": self.args.func_name,
-        "message": "Dynamic keyword arguments not allowed",
-        "additional": dynamic_args
+        LABELS.REF.SELF: self.args.func_name,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.X_NOT_ALLOWED.format(
+          X=LABELS.FUNC_NOUNS.DKWARGS
+        ),
+        LABELS.CAUSE.RECEIVED: dynamic_args
       })
 
     for keyword, received_arg in dynamic_args.items():
       if not matches_any_type(received_arg, self.dynamic):
         raise ValidationError({
-          "target": self.args.func_name,
-          "message": f"Argument type mismatch",
-          "allowed types": {cls.__name__ for cls in self.dynamic},
-          "received type": type(received_arg).__name__,
-          "argument index": keyword
+          LABELS.REF.SELF: self.args.func_name,
+          LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+            X=LABELS.FUNC_NOUNS.ARGS_TYPE
+          ),
+          LABELS.CAUSE.EXPECTED: {cls.__name__ for cls in self.dynamic},
+          LABELS.FUNC_NOUNS.RECV_TYPE: type(received_arg).__name__,
+          LABELS.FUNC_NOUNS.ARGS_IDX: keyword
         })
 
   def validate(self):

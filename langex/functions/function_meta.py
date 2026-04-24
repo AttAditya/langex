@@ -1,45 +1,58 @@
+from langex.constants.contents import CONTENTS
+from langex.constants.keys import LANGEX
+from langex.constants.labels import LABELS
 from langex.errors.misapplication import MisapplicationError
 from langex.functions.signature import Signature
+from langex.functions.signature_parser import SignatureParser
 
 class FunctionMeta:
   def __init__(self, func):
-    if isinstance(func, FunctionMeta):
-      self.name = func.name
-      self.qualname = func.qualname
-      self.func = func.func
-      self.signature = func.signature.clone()
-      self.is_abstract = func.is_abstract
-      self.owner = func.owner
-    else:
-      self.func = func
-      self.name = func.__name__
-      self.qualname = func.__qualname__
-      self.signature = Signature(self.qualname)
-      self.is_abstract = False
-      self.owner = None
+    if hasattr(func, LANGEX.FUNC_META):
+      return
 
-  def _is_class_function(self):
-    parts = self.qualname.split(".")
+    if type(func) != type(lambda: None):
+      arg_type = type(func).__name__
 
-    if len(parts) == 1:
-      return False
+      if arg_type == "type":
+        arg_type = LABELS.CLASS_NOUNS.CLASS_TYPE
 
-    return parts[-2] != "<locals>"
+      raise MisapplicationError({
+        LABELS.REF.SELF: func.__qualname__,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CONTRADICTING_X.format(
+          X=LABELS.FUNC_NOUNS.ARGS_TYPE
+        ),
+        LABELS.CAUSE.EXPECTED: LABELS.FUNC_NOUNS.FUNC_TYPE,
+        LABELS.CAUSE.RECEIVED: arg_type,
+      })
+
+    self.func = func
+    self.name = func.__name__
+    self.qual = func.__qualname__
+    self.signature = Signature(self.qual)
+    self.is_abstract = False
+    self._inject()
+
+  def _inject(self):
+    setattr(self, LANGEX.MARKER, True)
+    setattr(self, LANGEX.FUNC_META, self)
 
   def __call__(self, *args, **kwargs):
+    if self.is_abstract:
+      raise MisapplicationError({
+        LABELS.REF.SELF: self.qual,
+        LABELS.CAUSE.REASON: CONTENTS.ERRORS.CANNOT_A_X.format(
+          A=LABELS.ACTS.CALL,
+          X=LABELS.FUNC_NOUNS.ABS_FUNC
+        ),
+      })
+
     self.signature.args.validate(args, kwargs)
-
-    if self.owner:
-      args = (self.owner,) + args
-    else:
-      if self._is_class_function():
-        raise MisapplicationError({
-          "target": self.qualname,
-          "reason": "Called langex class function without langex class instance"
-        })
-
     result = self.func(*args, **kwargs)
     self.signature.returns.validate(result)
 
     return result
+
+  def detect_signature(self):
+    parser = SignatureParser(self.func, self.qual)
+    self.signature = parser.parse()
 

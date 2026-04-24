@@ -1,69 +1,80 @@
 from langex.classes.class_meta import ClassMeta
-from langex.errors.validation import ValidationError
-from langex.utils.extracter import extract_methods
+from langex.constants.keys import LANGEX
 
 __all__ = [
   "langex_class",
   "interface",
   "abstract",
   "implements",
+  "implements_bases",
+  "extends",
+  "extends_bases",
 ]
 
-def langex_class(cls):
-  if isinstance(cls, ClassMeta):
-    return cls
+def langex_class(cls) -> type:
+  return ClassMeta(cls).use_primitive()
 
-  return ClassMeta(cls)
+def interface(cls) -> type:
+  return ClassMeta(cls).use_interfacing()
 
-def interface(cls):
-  cls_meta = ClassMeta(cls)
-  cls_meta.is_interface = True
-  methods = extract_methods(cls_meta.cls)
+def abstract(cls) -> type:
+  return ClassMeta(cls).use_abstraction()
 
-  for method_name in methods:
-    method = methods[method_name]
-    cls_meta.methods_meta.add_abstract_method(method)
+def implements_bases(cls: type) -> type:
+  return implements(cls.__base__, *cls.__bases__)(cls)
 
-  return cls_meta
+def implements(*interfaces: type):
+  def requires_base_implements():
+    if len(interfaces) != 1:
+      return False
 
-def abstract(cls):
-  cls_meta = ClassMeta(cls)
-  cls_meta.is_abstract = True
-  methods = extract_methods(cls_meta.cls)
+    cls = interfaces[0]
+    meta = getattr(cls, LANGEX.CLASS_META)
+    qual_meta = meta.qual
+    qual_cls = cls.__qualname__
 
-  for method_name in methods:
-    method = methods[method_name]
+    return qual_meta != qual_cls
 
-    if method.is_abstract:
-      cls_meta.methods_meta.add_abstract_method(method)
-    else:
-      cls_meta.methods_meta.add_method(method)
+  if requires_base_implements():
+    return implements_bases(interfaces[0])
 
-  return cls_meta
-
-def implements(*interfaces):
-  def decorator(cls):
-    class_meta = ClassMeta(cls)
+  def decorator(cls: type):
+    meta = ClassMeta(cls)
+    meta.use_primitive()
 
     for interface in interfaces:
-      if not isinstance(interface, ClassMeta):
-        raise ValidationError({
-          "target": cls.__name__,
-          "source": interface.__name__,
-          "reason": "Source is not a class"
-        })
+      meta.implement(interface)
 
-      if not interface.is_interface:
-        raise ValidationError({
-          "target": cls.__name__,
-          "source": interface.__name__,
-          "reason": "Source is not an interface"
-        })
+    return cls
 
-      interface.methods_meta.impose(class_meta.cls)
-      class_meta.ancestors.add(interface)
+  return decorator
 
-    return class_meta
+def extends_bases(cls: type) -> type:
+  return extends(cls.__base__, *cls.__bases__)(cls)
+
+def extends(*parents: type):
+  def requires_base_extends():
+    if len(parents) != 1:
+      return False
+
+    cls = parents[0]
+    meta = getattr(cls, LANGEX.CLASS_META)
+    qual_meta = meta.qual
+    qual_cls = cls.__qualname__
+
+    return qual_meta != qual_cls
+
+  if requires_base_extends():
+    return extends_bases(parents[0])
+
+  def decorator(cls: type):
+    meta = ClassMeta(cls)
+    meta.use_primitive()
+
+    for interface in parents:
+      meta.extend(interface)
+
+    return cls
 
   return decorator
 

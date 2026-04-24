@@ -1,6 +1,8 @@
+from langex.constants.keys import LANGEX
 from langex.functions.function_meta import FunctionMeta
 
 __all__ = [
+  "langex_function",
   "abstracted",
   "no_args",
   "args_required",
@@ -10,13 +12,17 @@ __all__ = [
   "kwargs_optional",
   "kwargs_dynamic",
   "returns",
+  "autosig",
 ]
 
-def _prepare_function(func):
-  if not isinstance(func, FunctionMeta):
+def _prepare_function(func) -> FunctionMeta:
+  if not hasattr(func, LANGEX.MARKER):
     return FunctionMeta(func)
 
   return func
+
+def langex_function(func):
+  return _prepare_function(func)
 
 def abstracted(func):
   func = _prepare_function(func)
@@ -104,4 +110,10 @@ def returns(return_type: object):
     return func
 
   return decorator
+
+def autosig(func):
+  func = _prepare_function(func)
+  func.detect_signature()
+
+  return func
 
