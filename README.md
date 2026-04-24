@@ -3,6 +3,7 @@
 Extended Language Support for Python
 
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fpypi.org%2Fpypi%2Flangex%2Fjson&query=info.version&prefix=v&style=for-the-badge&logo=pypi&logoColor=%23ffffff&label=PyPI%20Release&labelColor=%230073b7&color=%23ffffff&link=https%3A%2F%2Fpypi.org%2Fproject%2Flangex%2F&cacheSeconds=30)](https://pypi.org/project/langex/)
+[![Sponsor](https://img.shields.io/badge/Sponsor%20PROJECT-db61a2?style=for-the-badge&logo=github)](https://github.com/sponsors/AttAditya)
 
 ## Installation
 
@@ -154,6 +155,24 @@ APIs and structure may evolve as the project grows.
 - [PyPI](https://pypi.org/project/langex/)
 - [GitHub](https://github.com/attaditya/langex)
 - [License](https://github.com/attaditya/langex/tree/main/LICENSE)
+
+## Contributors
+
+<a href="https://github.com/attaditya/langex/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=attaditya/langex" />
+</a>
+
+## Support
+
+If you find this project useful, please consider supporting it by **starring the GitHub repository** or sharing it with others who might benefit from it.
+
+Your support helps in the continued development and improvement of the project.
+
+You can also **contribute to the project** by submitting issues, suggesting features, or even contributing code through pull requests.
+
+You can also sponsor the project on GitHub Sponsors: [GitHub Sponsors - AttAditya](https://github.com/sponsors/AttAditya)
+
+---
 
 > _Made with <3 by [AttAditya](https://github.com/AttAditya)_
 
