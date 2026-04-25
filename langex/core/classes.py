@@ -1,19 +1,20 @@
-from typing import TypeVar
+from typing import Callable, Iterable, TypeVar
 
 from langex.classes.class_meta import ClassMeta
-from langex.constants.keys import LANGEX
 
 __all__ = [
   "langex_class",
   "interface",
   "abstract",
   "implements",
-  "implements_bases",
   "extends",
-  "extends_bases",
 ]
 
 ClassType = TypeVar("ClassType", bound=type)
+ClassTypes = Iterable[ClassType]
+ApplyFn = Callable[[ClassType], None]
+GetApplyFn = Callable[[ClassMeta], ApplyFn]
+ClassDecorator = Callable[[ClassType], ClassType]
 
 def langex_class(cls: ClassType) -> ClassType:
   return ClassMeta(cls).use_primitive()
@@ -24,61 +25,34 @@ def interface(cls: ClassType) -> ClassType:
 def abstract(cls: ClassType) -> ClassType:
   return ClassMeta(cls).use_abstraction()
 
-def implements_bases(cls: ClassType) -> ClassType:
-  return implements(cls.__base__, *cls.__bases__)(cls)
-
-def implements(*interfaces: ClassType) -> ClassType:
-  def requires_base_implements():
-    if len(interfaces) != 1:
-      return False
-
-    cls = interfaces[0]
-    meta = getattr(cls, LANGEX.CLASS_META)
-    qual_meta = meta.qual
-    qual_cls = cls.__qualname__
-
-    return qual_meta != qual_cls
-
-  if requires_base_implements():
-    return implements_bases(interfaces[0])
-
+def _create_decorator(
+  interfaces: ClassTypes,
+  get_apply_func: GetApplyFn
+) -> ClassDecorator:
   def decorator(cls: ClassType) -> ClassType:
     meta = ClassMeta(cls)
     meta.use_primitive()
 
     for interface in interfaces:
-      meta.implement(interface)
+      apply_func = get_apply_func(meta)
+      apply_func(interface)
 
     return cls
 
   return decorator
 
-def extends_bases(cls: ClassType) -> ClassType:
-  return extends(cls.__base__, *cls.__bases__)(cls)
+def implements(*interfaces: ClassType) -> ClassDecorator:
+  return _create_decorator(
+    interfaces,
+    lambda meta: meta.implement
+  )
 
-def extends(*parents: ClassType) -> ClassType:
-  def requires_base_extends():
-    if len(parents) != 1:
-      return False
+def extends(cls: ClassType) -> ClassType:
+  parents = (cls.__base__,) + cls.__bases__
+  decorator = _create_decorator(
+    parents,
+    lambda meta: meta.extend
+  )
 
-    cls = parents[0]
-    meta = getattr(cls, LANGEX.CLASS_META)
-    qual_meta = meta.qual
-    qual_cls = cls.__qualname__
-
-    return qual_meta != qual_cls
-
-  if requires_base_extends():
-    return extends_bases(parents[0])
-
-  def decorator(cls: ClassType) -> ClassType:
-    meta = ClassMeta(cls)
-    meta.use_primitive()
-
-    for interface in parents:
-      meta.extend(interface)
-
-    return cls
-
-  return decorator
+  return decorator(cls)
 
