@@ -51,4 +51,5 @@ EOF
 )
 
 gh pr edit "$PR_NUMBER" --repo "$REPO" --body "$BODY"
+gh pr comment "$PR_NUMBER" --repo "$REPO" --body "✅ PR summary updated using AI for commit \`$COMMIT\`."
 
