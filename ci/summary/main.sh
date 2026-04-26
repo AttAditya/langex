@@ -1,13 +1,16 @@
 #!/bin/bash
 set -e
 
-git fetch origin main
+git fetch origin main:main
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 COMMIT=$(git rev-parse HEAD)
 REPO_URL=$(git config --get remote.origin.url)
-DIFF=$(git diff origin/main...HEAD)
+
+DIFF=$(git diff main HEAD)
+
 TEMPLATE=$(cat .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null || echo "")
+
 CONTENT=$(cat <<EOF
 You are a PR summarizer.
 
