@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 git fetch origin main:main
@@ -6,6 +6,10 @@ git fetch origin main:main
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 COMMIT=$(git rev-parse HEAD)
 REPO_URL=$(git config --get remote.origin.url)
+
+echo "REPO URL: $REPO_URL"
+echo "BRANCH: $BRANCH"
+echo "COMMIT: $COMMIT"
 
 DIFF=$(git diff main HEAD)
 

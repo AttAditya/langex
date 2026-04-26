@@ -22,5 +22,6 @@ jobs:
       - name: Run publish script
         run: |
           chmod +x ci/publish/main.sh
+          ls -l ci/publish/main.sh
           bash ci/publish/main.sh
 
