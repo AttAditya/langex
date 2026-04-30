@@ -12,13 +12,18 @@ class LangexError(Exception):
     self.additional_info = additional_info
 
   def get_traceback(self):
-    result = ""
+    result = []
     tb_list = extract_tb(self.__traceback__)
 
     for tb in tb_list:
-      result += f"  {tb.filename} {tb.lineno}\n"
+      result.append(f"  {tb.filename} {tb.lineno}")
 
-    return result
+    initial_count = result[-1].count("langex") if result else 0
+
+    while result and result[-1].count("langex") >= initial_count:
+      result.pop()
+
+    return "\n".join(result)
 
   def __str__(self):
     err_text = f"Langex Error ({self.type})\n"
