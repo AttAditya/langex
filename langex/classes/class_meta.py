@@ -28,7 +28,13 @@ class ClassMeta:
     self.class_type = LANGEX.CLASS_TYPE.UNSET
     self.follows: set[ClassMeta] = set()
     self.methods = MethodsMeta(self)
+    self.instanciated = False
     self._inject()
+
+  def _manipulate_signatures(self):
+    for method_name in self.methods.implemented:
+      method = self.methods.implemented[method_name]
+      method.args.positional = method.args.positional[1:]
 
   def _create_class_instance(self, *args, **kwargs):
     if self.is_interface():
@@ -49,6 +55,10 @@ class ClassMeta:
         )
       })
 
+    if not self.instanciated:
+      self.instanciated = True
+      self._manipulate_signatures()
+
     args = args[1:]
     instance = object.__new__(self.cls)
     instance.__init__(*args, **kwargs)
@@ -66,9 +76,6 @@ class ClassMeta:
 
       if method_name in self.methods.abstracted:
         signature = self.methods.abstracted[method_name]
-
-      if signature.args.positional:
-        signature.args.positional.pop(0)
 
       method.signature = signature
       method.func = func_ref.__get__(instance, self.cls)
