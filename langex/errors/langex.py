@@ -28,7 +28,7 @@ class LangexError(Exception):
   def __str__(self):
     err_text = f"Langex Error ({self.type})\n"
     err_text += "Traceback:\n"
-    err_text += self.get_traceback()
+    err_text += self.get_traceback() + "\n\n"
     err_text += "Additional Information:\n"
 
     for key, value in self.additional_info.items():
