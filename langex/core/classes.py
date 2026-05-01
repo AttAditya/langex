@@ -1,6 +1,7 @@
 from typing import Callable, Iterable, TypeVar
 
 from langex.classes.class_meta import ClassMeta
+from langex.classes.singleton import Singleton
 
 __all__ = [
   "langex_class",
@@ -8,6 +9,7 @@ __all__ = [
   "abstract",
   "implements",
   "extends",
+  "singleton"
 ]
 
 ClassType = TypeVar("ClassType", bound=type)
@@ -55,4 +57,7 @@ def extends(cls: ClassType) -> ClassType:
   )
 
   return decorator(cls)
+
+def singleton(cls: ClassType) -> ClassType:
+  return Singleton(cls)
 
