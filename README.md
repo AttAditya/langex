@@ -80,6 +80,30 @@ print(add(1, 2)) # prints the integer 3 in console
 print(add("1", "2")) # raises Langex Validation Error
 ```
 
+### Singleton Class Example
+
+```py
+from langex.core.classes import singleton
+
+@singleton
+class IdGenerator:
+  def __init__(self, initial = 0):
+    self.value = initial
+
+  def next_id(self):
+    self.value += 1
+    return self.value
+
+id_gen1 = IdGenerator()
+id_gen2 = IdGenerator()
+
+print(id_gen1.next_id()) # prints 1 in console
+print(id_gen1.next_id()) # prints 2 in console
+print(id_gen2.next_id()) # prints 3 in console
+
+print(id_gen1 is id_gen2) # prints True in console
+```
+
 ## Project Structure
 
 ```tree
@@ -89,7 +113,8 @@ langex
 ├── classes
 │   ├── __init__.py
 │   ├── class_meta.py
-│   └── methods_meta.py
+│   ├── methods_meta.py
+│   └── singleton.py
 ├── constants
 │   ├── __init__.py
 │   ├── contents.py
