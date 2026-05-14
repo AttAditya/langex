@@ -11,6 +11,8 @@ class PositionalArgsValidator(Validator):
     self.required = self.args.positional
     self.optional = self.args.optional_positional
     self.dynamic = self.args.dynamic_positional
+    if self.args.class_bounded:
+      self.required = self.required[1:]
 
   def _partition(self) -> tuple[list[object], ...]:
     required_args = []
