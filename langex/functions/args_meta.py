@@ -17,6 +17,7 @@ class Args:
     self.func_name = func_name
     self.has_args = False
     self.no_args = False
+    self.class_bounded = False
     self.positional: list[object] = []
     self.keyword: dict[str, object] = {}
     self.optional_positional: list[object] = []
@@ -115,6 +116,9 @@ class Args:
 
     self.has_args = True
     self.no_args = True
+
+  def set_class_bounded(self):
+    self.class_bounded = True
 
   def clone(self):
     new_args = Args(self.func_name)

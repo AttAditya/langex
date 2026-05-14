@@ -31,10 +31,10 @@ class ClassMeta:
     self.instanciated = False
     self._inject()
 
-  def _manipulate_signatures(self):
+  def _bound_class(self):
     for method_name in self.methods.implemented:
       method = self.methods.implemented[method_name]
-      method.args.positional = method.args.positional[1:]
+      method.args.set_class_bounded()
 
   def _create_class_instance(self, *args, **kwargs):
     if self.is_interface():
@@ -55,10 +55,7 @@ class ClassMeta:
         )
       })
 
-    if not self.instanciated:
-      self.instanciated = True
-      self._manipulate_signatures()
-
+    self._bound_class()
     args = args[1:]
     instance = object.__new__(self.cls)
     instance.__init__(*args, **kwargs)
