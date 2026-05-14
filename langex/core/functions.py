@@ -20,10 +20,16 @@ __all__ = [
 FuncType = TypeVar("FuncType", bound=Callable)
 
 def _prepare_function(func) -> FunctionMeta:
-  if not hasattr(func, LANGEX.MARKER):
-    return FunctionMeta(func)
+  if hasattr(func, LANGEX.MARKER):
+    return func
 
-  return func
+  meta = FunctionMeta(func)
+  meta.signature.args.add_positional(object)
+
+  if not meta.bounded:
+    meta.signature.args.positional.pop()
+
+  return meta
 
 def langex_function(func: FuncType) -> FuncType:
   return _prepare_function(func)

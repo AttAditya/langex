@@ -28,6 +28,7 @@ class FunctionMeta:
     self.func = func
     self.name = func.__name__
     self.qual = func.__qualname__
+    self.bounded = self.check_class_bound()
     self.signature = Signature(self.qual)
     self.is_abstract = False
     self._inject()
@@ -35,6 +36,14 @@ class FunctionMeta:
   def _inject(self):
     setattr(self, LANGEX.MARKER, True)
     setattr(self, LANGEX.FUNC_META, self)
+
+  def check_class_bound(self):
+    parts = self.qual.split(".")
+
+    if len(parts) < 2:
+      return False
+
+    return parts[-2] != "<locals>"
 
   def __call__(self, *args, **kwargs):
     if self.is_abstract:
