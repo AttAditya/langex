@@ -21,12 +21,14 @@ The project builds small language utilities that operate on Python objects (func
 
 ## Features
 
-- Interface-like constructs for Python classes  
-- Metadata extraction for Python objects and callables  
-- Runtime validation utilities  
-- Decorator-based language extensions  
-- Runtime argument and return type checking  
-- Lightweight core inspection tools  
+- Interface-like constructs for Python classes
+- Metadata extraction for Python objects and callables
+- Utility classes like Singleton
+- Runtime validation utilities
+- Decorator-based language extensions
+- Runtime argument and return type checking
+- Lightweight core inspection tools
+- An abstracted testing toolkit
 
 ## Example
 
@@ -123,7 +125,8 @@ langex
 ├── core
 │   ├── __init__.py
 │   ├── classes.py
-│   └── functions.py
+│   ├── functions.py
+│   └── testing.py
 ├── errors
 │   ├── __init__.py
 │   ├── instantiation.py
@@ -136,8 +139,12 @@ langex
 │   ├── args_meta.py
 │   ├── function_meta.py
 │   ├── returns_meta.py
-│   ├── signature.py
-│   └── signature_parser.py
+│   ├── signature_parser.py
+│   └── signature.py
+├── testing
+│   ├── __init__.py
+│   ├── data.py
+│   └── helpers.py
 ├── utils
 │   ├── __init__.py
 │   ├── extracter.py
