@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langex"
-version = "0.3.13"
+version = "0.3.14"
 description = "Extended Language Support for Python"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -18,6 +18,9 @@ keywords = [
   "decorators",
   "type-checking",
   "runtime-validation",
+  "testing-tools",
+  "tests",
+  "language-extensions",
   "language-tools"
 ]
 
