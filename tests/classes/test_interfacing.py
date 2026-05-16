@@ -1,6 +1,7 @@
 from langex.core.classes import implements, interface
 from langex.core.functions import args_required, returns
 from langex.core.testing import expects, discover_test
+from langex.errors.instantiation import InstantiationError
 from langex.errors.validation import ValidationError
 
 @interface
@@ -29,13 +30,7 @@ class ImplementationClass:
 @discover_test
 def test_interface():
   inst = ImplementationClass(3)
-
-  def test_instance():
-    return 0
-
-  test_instance @expects (0)
-  test_instance @expects (0)
-  # test_instance @expects_like (lambda x: x in [0, 1, 2])
+  (lambda: InterfaceClass()  ) @expects (InstantiationError)
   (lambda: inst.method1(5)   ) @expects (15)
   (lambda: inst.method2("hi")) @expects ("HIHIHI")
   (lambda: inst.method1("5") ) @expects (ValidationError)
