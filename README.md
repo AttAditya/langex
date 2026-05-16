@@ -29,6 +29,7 @@ The project builds small language utilities that operate on Python objects (func
 - Runtime argument and return type checking
 - Lightweight core inspection tools
 - An abstracted testing toolkit
+- Simple pipeline construction utilities
 
 ## Example
 
@@ -106,6 +107,26 @@ print(id_gen2.next_id()) # prints 3 in console
 print(id_gen1 is id_gen2) # prints True in console
 ```
 
+### Pipelines
+
+```py
+from langex.core.pipeline import Pipeline
+
+process1 = lambda incoming: 1 if incoming is None else incoming
+process2 = lambda incoming: incoming * 2
+process3 = lambda incoming: incoming + 2
+
+pipeline = (
+  Pipeline
+  | process1
+  | process2
+  | process3
+)
+
+print(pipeline.run()) # prints 4 in console
+print(pipeline.run(10)) # prints 22 in console
+```
+
 ## Project Structure
 
 ```tree
@@ -126,6 +147,7 @@ langex
 │   ├── __init__.py
 │   ├── classes.py
 │   ├── functions.py
+│   ├── pipeline.py
 │   └── testing.py
 ├── errors
 │   ├── __init__.py
@@ -141,6 +163,9 @@ langex
 │   ├── returns_meta.py
 │   ├── signature_parser.py
 │   └── signature.py
+├── pipelines
+│   ├── __init__.py
+│   └── handler.py
 ├── testing
 │   ├── __init__.py
 │   ├── data.py
