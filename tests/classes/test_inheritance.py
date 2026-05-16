@@ -18,12 +18,12 @@ class ParentClass:
 class ChildClass(ParentClass):
   def method1(self, a: int) -> int:
     return a * 2
-  
+
 @extends
 class AnotherChildClass(ParentClass):
   def method1(self, a: int) -> int:
     return a * 3
-  
+
   def method2(self, b: str) -> str:
     return b.lower()
 
