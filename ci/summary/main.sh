@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+gh pr comment "$PR_NUMBER" --repo "$REPO" --body "🔍 Generating PR summary using AI for commit \`$COMMIT\`..."
+
 git fetch origin main:main
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)

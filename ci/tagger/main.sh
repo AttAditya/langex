@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+gh pr comment "$PR_NUMBER" --repo "$REPO" --body "🏷️ Generating labels using AI for commit \`$COMMIT\`..."
+
 git fetch origin main:main
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -49,13 +51,13 @@ Version Information:
 
 Note:
 - You can add more than one label if applicable.
-- Only apply the `RELEASE` label if the version has changed compared to main.
-  - You also need to add `MAJOR`, `MINOR` based on the type of version change.
-    - `1.0.0` -> `2.0.0` is a MAJOR change
-    - `x.1.0` -> `x.2.0` is also a MAJOR change
-    - `x.y.0` -> `x.y.1` is a MINOR change
-- Do not apply tags like `FEAT`, `FIX`, etc. if there are more relevant tags available based on the content.
-  - For example, if there is a `ENV` label available, and the changes are only related to environment folders like `ci` or `.github` or `dev.sh` or `scripts` or so on, then prefer `ENV` over `FEAT` or `FIX`.
+- Only apply the \`RELEASE\` label if the version has changed compared to main.
+  - You also need to add \`MAJOR\`, \`MINOR\` based on the type of version change.
+    - \`1.0.0\` -> \`2.0.0\` is a MAJOR change
+    - \`x.1.0\` -> \`x.2.0\` is also a MAJOR change
+    - \`x.y.0\` -> \`x.y.1\` is a MINOR change
+- Do not apply tags like \`FEAT\`, \`FIX\`, etc. if there are more relevant tags available based on the content.
+  - For example, if there is a \`ENV\` label available, and the changes are only related to environment folders like \`ci\` or \`.github\` or \`dev.sh\` or \`scripts\` or so on, then prefer \`ENV\` over \`FEAT\` or \`FIX\`.
 
 Content:
 $INPUT_CONTENT
