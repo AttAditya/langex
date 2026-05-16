@@ -16,7 +16,7 @@ class Test:
   @autosig
   def add(self, a: int, b: int) -> int:
     return a + b
-  
+
   @autosig
   def sum_all(self, *args: int) -> int:
     return sum(args)
