@@ -3,6 +3,8 @@ name: PR Summary
 on:
   issue_comment:
     types: [created]
+  pull_request:
+    types: [opened, edited]
 
 permissions:
   contents: read
@@ -10,22 +12,33 @@ permissions:
 
 jobs:
   summary:
-    if: github.event.issue.pull_request != null && github.event.comment.body == '/ci summary'
+    if: |
+      (
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request != null &&
+        github.event.comment.body == '/ci summary'
+      ) ||
+      (
+        github.event_name == 'pull_request' &&
+        (
+          github.event.pull_request.body == '' ||
+          github.event.pull_request.body == null
+        )
+      )
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ github.event.issue.number }}/head
+          ref: refs/pull/${{ github.event.pull_request.number || github.event.issue.number }}/head
 
       - name: Run summary script
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           URL: ${{ secrets.AI_URL }}
           TOKEN: ${{ secrets.AI_TOKEN }}
-          PR_NUMBER: ${{ github.event.issue.number }}
+          PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
           chmod +x ci/summary/main.sh
           bash ci/summary/main.sh
-
