@@ -65,6 +65,7 @@ class ClassMeta:
 
     for method_name in methods:
       method = methods[method_name]
+      method = method.clone()
       func_ref = method.func
       signature = None
 

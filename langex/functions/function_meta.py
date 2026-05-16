@@ -4,6 +4,7 @@ from langex.constants.labels import LABELS
 from langex.errors.misapplication import MisapplicationError
 from langex.functions.signature import Signature
 from langex.functions.signature_parser import SignatureParser
+from langex.utils.cloner import clone_function
 
 class FunctionMeta:
   def __init__(self, func):
@@ -44,6 +45,11 @@ class FunctionMeta:
       return False
 
     return parts[-2] != "<locals>"
+
+  def clone(self):
+    return self.__class__(
+      clone_function(self.func)
+    )
 
   def __call__(self, *args, **kwargs):
     if self.is_abstract:

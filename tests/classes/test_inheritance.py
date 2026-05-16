@@ -15,12 +15,12 @@ class ParentClass:
     return b.upper()
 
 @extends
-class ChildClass(ParentClass):
+class ChildClass1(ParentClass):
   def method1(self, a: int) -> int:
     return a * 2
 
 @extends
-class AnotherChildClass(ParentClass):
+class ChildClass2(ParentClass):
   def method1(self, a: int) -> int:
     return a * 3
 
@@ -29,8 +29,8 @@ class AnotherChildClass(ParentClass):
 
 @discover_test
 def test_inheritance():
-  child1 = ChildClass()
-  child2 = AnotherChildClass()
+  child1 = ChildClass1()
+  child2 = ChildClass2()
   (lambda: ParentClass()       ) @expects (InstantiationError)
   (lambda: child1.method1(5)   ) @expects (10)
   (lambda: child2.method1(5)   ) @expects (15)
