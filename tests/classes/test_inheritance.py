@@ -1,7 +1,7 @@
 from langex.core.classes import abstract, extends
+from langex.core.errors import InstantiationError
 from langex.core.functions import abstracted, autosig
 from langex.core.testing import discover_test, expects
-from langex.errors.instantiation import InstantiationError
 
 @abstract
 class ParentClass:
@@ -31,7 +31,7 @@ class AnotherChildClass(ParentClass):
 def test_inheritance():
   child1 = ChildClass()
   child2 = AnotherChildClass()
-  (lambda: ParentClass()      ) @expects (InstantiationError)
+  (lambda: ParentClass()       ) @expects (InstantiationError)
   (lambda: child1.method1(5)   ) @expects (10)
   (lambda: child2.method1(5)   ) @expects (15)
   (lambda: child1.method2("Hi")) @expects ("HI")
