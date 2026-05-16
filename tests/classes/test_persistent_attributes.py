@@ -6,12 +6,12 @@ from langex.core.testing import discover_test, expects
 class Parent:
   def get_name(self) -> str:
     return self.name
-  
+
   @args_required(int)
   @returns(str)
   def manual_args(self, a: int) -> str:
     return self.name
-  
+
   @autosig
   def auto_args(self, a: int) -> str:
     return self.name
