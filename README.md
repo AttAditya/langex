@@ -13,7 +13,7 @@ pip install langex
 
 ## About
 
-LangEx is an experimental Python library that introduces additional language-level constructs using decorators, metadata inspection, and runtime validation.
+LangEx is an evolving Python library that introduces additional language-level constructs using decorators, metadata inspection, and runtime validation.
 
 It focuses on enabling capabilities that Python does not strictly enforce by default, such as interface-like structures, structured metadata, and runtime type validation.
 
@@ -146,6 +146,7 @@ langex
 ├── core
 │   ├── __init__.py
 │   ├── classes.py
+│   ├── errors.py
 │   ├── functions.py
 │   ├── pipeline.py
 │   └── testing.py
@@ -204,8 +205,11 @@ Rather than acting as a framework, LangEx provides foundational language tools t
 
 ## Status
 
-Experimental and under active development.  
-APIs and structure may evolve as the project grows.
+LangEx is currently in the evolution stage, with a growing set of language utilities and features. The project is actively maintained and open to contributions.
+
+It is no longer in experimental alpha phase, but is still considered to be unstable for some use cases. It is recommended to use it in non-critical projects or for experimentation until it reaches a more stable release.
+
+Once applications and projects using LangEx start performing reliably in production environments, the project will be considered mature and stable enough for wider adoption, with a 1.0.0 release.
 
 ## Links
 
