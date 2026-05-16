@@ -7,11 +7,11 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 COMMIT=$(git rev-parse HEAD)
 REPO_URL=$(git config --get remote.origin.url)
 
-gh pr comment "$PR_NUMBER" --repo "$REPO" --body "🏷️ Generating labels using AI for commit \`$COMMIT\`..."
-
 IS_PR=${IS_PR:-true}
 NUMBER=${NUMBER}
 REPO=${REPO}
+
+gh pr comment "$NUMBER" --repo "$REPO" --body "🏷️ Generating labels using AI for commit \`$COMMIT\`..."
 
 get_local_version() {
   grep -E '^version\s*=' pyproject.toml | head -1 | sed -E 's/.*"([^"]+)".*/\1/'
