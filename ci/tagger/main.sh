@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-gh pr comment "$PR_NUMBER" --repo "$REPO" --body "🏷️ Generating labels using AI for commit \`$COMMIT\`..."
-
 git fetch origin main:main
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 COMMIT=$(git rev-parse HEAD)
 REPO_URL=$(git config --get remote.origin.url)
+
+gh pr comment "$PR_NUMBER" --repo "$REPO" --body "🏷️ Generating labels using AI for commit \`$COMMIT\`..."
 
 IS_PR=${IS_PR:-true}
 NUMBER=${NUMBER}
