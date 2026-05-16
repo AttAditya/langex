@@ -1,6 +1,6 @@
+from langex.core.errors import ValidationError
 from langex.core.functions import args_required, returns
 from langex.core.testing import discover_test, expects
-from langex.errors.validation import ValidationError
 
 @args_required(int, int)
 @returns(int)

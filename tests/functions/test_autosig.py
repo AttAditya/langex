@@ -1,7 +1,7 @@
 from langex.core.classes import langex_class
+from langex.core.errors import ValidationError
 from langex.core.functions import autosig
 from langex.core.testing import discover_test, expects
-from langex.errors.validation import ValidationError
 
 @autosig
 def mul(a: int, b: int) -> int:
