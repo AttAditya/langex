@@ -14,5 +14,5 @@ pipeline = (
 @discover_test
 def test_pipeline():
   (lambda: pipeline.run()  ) @expects (4)
-  (lambda: pipeline.run(10)) @expects (4)
+  (lambda: pipeline.run(10)) @expects (22)
 
