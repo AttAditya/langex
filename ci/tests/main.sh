@@ -10,8 +10,8 @@ result=$?
 
 test_stats=$(cat <<EOF
 Tests completed for commit $COMMIT
-\`\`\`
-$(cat ci/tests/test.log)
+\`\`\`yml
+$(cat ci/tests/test.log | grep "Tests Results:" -A 10000)
 \`\`\`
 EOF
 )
