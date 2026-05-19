@@ -41,7 +41,7 @@ def handle_callable(
 ) -> None:
   if result.evaluated(): return
   if args.arg_type != callable: return
-  return callable(args.received_arg)
+  result.evaluate(callable(args.received_arg))
 
 def handle_langex_class(
   result: _MatchResult, args: _MatchArgs
