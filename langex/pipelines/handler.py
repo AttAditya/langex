@@ -19,3 +19,6 @@ class Pipeline:
   def __or__(self, value):
     return self.__rshift__(value)
 
+  def __call__(self, initial_value=None):
+    return self.run(initial_value)
+
