@@ -1,17 +1,17 @@
-class Singleton:
-  def __init__(self, cls):
-    self.cls = cls
-    self.instance = None
+from langex.classes.class_meta import ClassMeta
 
-  def __call__(self, *args, **kwargs):
-    if self.instance is None:
-      self.instance = self.cls(*args, **kwargs)
+def Singleton(cls):
+  instance = ClassMeta(cls).use_primitive()()
 
-    return self.instance
+  class Wrapper():
+    def __call__(self):
+      return instance
 
-  def __getattr__(self, name):
-    if self.instance is None:
-      self.instance = self.cls()
+    def __getattr__(self, name):
+      return getattr(instance, name)
 
-    return getattr(self.instance, name)
+    def __setattr__(self, name, value):
+      return setattr(instance, name, value)
+
+  return Wrapper()
 
