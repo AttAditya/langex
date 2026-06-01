@@ -32,11 +32,21 @@ class FunctionMeta:
     self.bounded = self.check_class_bound()
     self.signature = Signature(self.qual)
     self.is_abstract = False
+    self._inject_mimic(func)
     self._inject()
 
   def _inject(self):
     setattr(self, LANGEX.MARKER, True)
     setattr(self, LANGEX.FUNC_META, self)
+
+  def _inject_mimic(self, func):
+    self.__code__ = self.func.__code__
+    self.__defaults__ = self.func.__defaults__
+    self.__kwdefaults__ = self.func.__kwdefaults__
+    self.__annotations__ = self.func.__annotations__
+    self.__doc__ = self.func.__doc__
+    self.__qualname__ = self.func.__qualname__
+    self.__name__ = self.func.__name__
 
   def check_class_bound(self):
     parts = self.qual.split(".")
